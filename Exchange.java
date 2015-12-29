@@ -32,7 +32,7 @@ public class Exchange { // 所有交易用到的方法
 	static CloseableHttpClient Exchanger = HttpClientBuilder.create().build();
 
 	public static void Login() { // 自动登录账号信息，包含登录需要的，向登录页请求，向验证码页请求，
-		Globals.getUserInfo(); //获取登录需要的账号信息
+		Globals.getUserInfo(); // 获取登录需要的账号信息
 		HttpGet getLoginPage = new HttpGet(Globals.login_page);
 		try {
 			Exchanger.execute(getLoginPage); // 发起对登录页的GET请求
@@ -148,7 +148,7 @@ public class Exchange { // 所有交易用到的方法
 																						// data
 																						// =
 																						// 字段
-//			System.out.println(TradeInfoJsonBase64); // 调试用，输出base64编码的的交易信息
+			// System.out.println(TradeInfoJsonBase64); // 调试用，输出base64编码的的交易信息
 			byte[] TradeInfoJsonByte = Base64.getDecoder().decode(TradeInfoJsonBase64); // 将base64格式解码
 			String TradeInfoJson = null;
 			try {
@@ -156,7 +156,7 @@ public class Exchange { // 所有交易用到的方法
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
-//			System.out.println(TradeInfoJson); // 调试用，输出json格式的交易信息
+			// System.out.println(TradeInfoJson); // 调试用，输出json格式的交易信息
 			JSONObject jo = JSONObject.fromObject(TradeInfoJson);
 			JSONArray ja = jo.getJSONArray("item");
 			JSONObject shanghai = ja.getJSONObject(0); // 读取上海交易账号信息
@@ -170,12 +170,13 @@ public class Exchange { // 所有交易用到的方法
 			Globals.trdpwd = jo.getString("trdpwd");
 			Globals.uid = jo.getString("uid");
 			Globals.branch_no = jo.getString("branch_no");
+			Globals.op_branch_no = jo.getString("branch_no");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static String GetPosition(){ //获取账户持仓状况
+	public static String GetPosition() { // 获取账户持仓状况
 		String Position = null;
 		String PositionParams = Globals.position().toString();
 		Pattern dot = Pattern.compile(", ");
@@ -183,14 +184,14 @@ public class Exchange { // 所有交易用到的方法
 		String temp = MatchDot.replaceAll("&");
 		temp = temp.substring(1, temp.length() - 1);
 		String Params = CreatBasicParams() + temp;
-//		System.out.println(Params); // 调试用，输出参数设置
-		String PositionURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes()); 
-//		System.out.println(PositionURL); // 调试用，输出申请的网页地址
+		// System.out.println(Params); // 调试用，输出参数设置
+		String PositionURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes());
+		// System.out.println(PositionURL); // 调试用，输出申请的网页地址
 		HttpGet getPosition = new HttpGet(PositionURL);
-		getPosition.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+		getPosition.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 		try {
 			Exchanger.execute(getPosition);
-//			System.out.println(" "); // 调试用断点位置
+			// System.out.println(" "); // 调试用断点位置
 			HttpResponse responseGetPosition = Exchanger.execute(getPosition); // 调试用，发起对登录页的GET请求
 			String PositionJsonBase64 = EntityUtils.toString(responseGetPosition.getEntity(), "utf-8"); // 获取登录页的内容
 			byte[] PositionJsonByte = Base64.getDecoder().decode(PositionJsonBase64); // 将base64格式解码
@@ -198,7 +199,8 @@ public class Exchange { // 所有交易用到的方法
 			try {
 				PositionJson = new String(PositionJsonByte, "utf-8"); // 对解码后使用utf-8编码得到json格式交易信息
 				Position = PositionJson;
-				//处理json
+				// 处理json
+				System.out.println(PositionJson); // 调试用
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
@@ -209,8 +211,8 @@ public class Exchange { // 所有交易用到的方法
 		}
 		return Position;
 	}
-	
-	public static String GetBalance(){ //获取账户资金状况
+
+	public static String GetBalance() { // 获取账户资金状况
 		String Balance = null;
 		String BalanceParams = Globals.balance().toString();
 		Pattern dot = Pattern.compile(", ");
@@ -218,14 +220,14 @@ public class Exchange { // 所有交易用到的方法
 		String temp = MatchDot.replaceAll("&");
 		temp = temp.substring(1, temp.length() - 1);
 		String Params = CreatBasicParams() + temp;
-//		System.out.println(Params); // 调试用，输出参数设置
-		String BalanceURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes()); 
-//		System.out.println(BalanceURL); // 调试用，输出申请的网页地址
+		// System.out.println(Params); // 调试用，输出参数设置
+		String BalanceURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes());
+		// System.out.println(BalanceURL); // 调试用，输出申请的网页地址
 		HttpGet getBalance = new HttpGet(BalanceURL);
-		getBalance.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+		getBalance.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 		try {
 			Exchanger.execute(getBalance);
-//			System.out.println(" "); // 调试用断点位置
+			// System.out.println(" "); // 调试用断点位置
 			HttpResponse responseGetBalance = Exchanger.execute(getBalance); // 调试用，发起对登录页的GET请求
 			String BalanceJsonBase64 = EntityUtils.toString(responseGetBalance.getEntity(), "utf-8"); // 获取登录页的内容
 			byte[] BalanceJsonByte = Base64.getDecoder().decode(BalanceJsonBase64); // 将base64格式解码
@@ -233,7 +235,8 @@ public class Exchange { // 所有交易用到的方法
 			try {
 				BalanceJson = new String(BalanceJsonByte, "utf-8"); // 对解码后使用utf-8编码得到json格式交易信息
 				Balance = BalanceJson;
-				//处理json
+				// 处理json
+				// System.out.println(BalanceJson); //调试用
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
@@ -245,7 +248,7 @@ public class Exchange { // 所有交易用到的方法
 		return Balance;
 	}
 
-	public static String GetEntrust(){ //获取当日委托单
+	public static String GetEntrust() { // 获取当日委托单
 		String Entrust = null;
 		String EntrustParams = Globals.entrust().toString();
 		Pattern dot = Pattern.compile(", ");
@@ -253,14 +256,14 @@ public class Exchange { // 所有交易用到的方法
 		String temp = MatchDot.replaceAll("&");
 		temp = temp.substring(1, temp.length() - 1);
 		String Params = CreatBasicParams() + temp;
-//		System.out.println(Params); // 调试用，输出参数设置
-		String EntrustURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes()); 
-//		System.out.println(EntrustURL); // 调试用，输出申请的网页地址
+		// System.out.println(Params); // 调试用，输出参数设置
+		String EntrustURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes());
+		// System.out.println(EntrustURL); // 调试用，输出申请的网页地址
 		HttpGet getEntrust = new HttpGet(EntrustURL);
-		getEntrust.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+		getEntrust.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 		try {
 			Exchanger.execute(getEntrust);
-//			System.out.println(" "); // 调试用断点位置
+			// System.out.println(" "); // 调试用断点位置
 			HttpResponse responseGetEntrust = Exchanger.execute(getEntrust); // 调试用，发起对登录页的GET请求
 			String EntrustJsonBase64 = EntityUtils.toString(responseGetEntrust.getEntity(), "utf-8"); // 获取登录页的内容
 			byte[] EntrustJsonByte = Base64.getDecoder().decode(EntrustJsonBase64); // 将base64格式解码
@@ -268,7 +271,8 @@ public class Exchange { // 所有交易用到的方法
 			try {
 				EntrustJson = new String(EntrustJsonByte, "utf-8"); // 对解码后使用utf-8编码得到json格式交易信息
 				Entrust = EntrustJson;
-				//处理json
+				// 处理json
+				// System.out.println(Entrust); //调试用
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
@@ -279,8 +283,8 @@ public class Exchange { // 所有交易用到的方法
 		}
 		return Entrust;
 	}
-	
-	public static String CancelEntrust(int EntrustNo){ //取消委托单
+
+	public static String CancelEntrust(int EntrustNo) { // 取消委托单
 		String CancelEntrust = null;
 		String CancelEntrustParams = Globals.cancel_entrust().toString();
 		Pattern dot = Pattern.compile(", ");
@@ -288,17 +292,20 @@ public class Exchange { // 所有交易用到的方法
 		String temp = MatchDot.replaceAll("&");
 		temp = temp.substring(1, temp.length() - 1);
 		String password = Globals.trdpwd;
-		int entrust_no = EntrustNo; //要取消的委托单号
-		temp = temp + "&" + "password=" + password + "&" + "entrust_no=" + entrust_no;
-		String Params = CreatBasicParams() + temp;
-//		System.out.println(Params); // 调试用，输出参数设置
-		String CancelEntrustURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes()); 
-//		System.out.println(CancelEntrustURL); // 调试用，输出申请的网页地址
+		Random random = new Random();
+		int r = random.nextInt();
+		int entrust_no = EntrustNo; // 要取消的委托单号
+		temp = temp + "&" + "password=" + password + "&" + "entrust_no=" + entrust_no + "&" + "ram=" + r;
+		String Params = temp;
+		// System.out.println(Params); // 调试用，输出参数设置
+		String CancelEntrustURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes());
+		System.out.println(CancelEntrustURL); // 调试用，输出申请的网页地址
 		HttpGet getCancelEntrust = new HttpGet(CancelEntrustURL);
-		getCancelEntrust.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+		getCancelEntrust.setHeader("User-Agent",
+				"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 		try {
 			Exchanger.execute(getCancelEntrust);
-//			System.out.println(" "); // 调试用断点位置
+			// System.out.println(" "); // 调试用断点位置
 			HttpResponse responseGetCancelEntrust = Exchanger.execute(getCancelEntrust); // 调试用，发起对登录页的GET请求
 			String CancelEntrustJsonBase64 = EntityUtils.toString(responseGetCancelEntrust.getEntity(), "utf-8"); // 获取登录页的内容
 			byte[] CancelEntrustJsonByte = Base64.getDecoder().decode(CancelEntrustJsonBase64); // 将base64格式解码
@@ -306,7 +313,8 @@ public class Exchange { // 所有交易用到的方法
 			try {
 				CancelEntrustJson = new String(CancelEntrustJsonByte, "utf-8"); // 对解码后使用utf-8编码得到json格式交易信息
 				CancelEntrust = CancelEntrustJson;
-				//处理json
+				// 处理json
+				System.out.println(CancelEntrust); // 调试用
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
@@ -317,8 +325,8 @@ public class Exchange { // 所有交易用到的方法
 		}
 		return CancelEntrust;
 	}
-	
-	public static String Buy(int StockCode, int Price){ // 买
+
+	public static String Buy(int StockCode, double Price, int Amount) { // 买
 		String Buy = null;
 		String BuyParams = Globals.buy().toString();
 		Pattern dot = Pattern.compile(", ");
@@ -326,26 +334,33 @@ public class Exchange { // 所有交易用到的方法
 		String temp = MatchDot.replaceAll("&");
 		temp = temp.substring(1, temp.length() - 1);
 		int stock_code = StockCode; // 股票代码
-		int exchange_type = selectSHSZ(stock_code); //选择上海深圳
+		int exchange_type = selectSHSZ(stock_code); // 选择上海深圳
 		String stock_account = null;
-		if (exchange_type == 1){
+		if (exchange_type == 1) {
 			stock_account = Globals.sh_stock_account;
-		}
-		else {
+		} else {
 			stock_account = Globals.sz_stock_account;
 		}
-		int price = Price; // 买入价格
+		int entrust_amount = Amount; // 买入总股数
+		double entrust_price = Price; // 买入价格
+		// int volume = Volume; // 买入总金额 由 volume / price 取 100 的整数， 若指定 amount
+		// 则此参数无效
 		int entrust_prop = 0; // 委托类型，暂未实现，默认为限价委托
-		temp = temp + "&" + "stock_account=" + stock_account + "&" + "exchange_type=" + exchange_type + "&" + "fund_account=" + Globals.fund_account + "&" + "client_risklevel=" + Globals.branch_no + "&" + "op_station=" + Globals.op_station + "&" + "trdpwd=" + Globals.trdpwd  + "&" + "uid=" + Globals.uid + "&" + "branch_no=" + Globals.branch_no + "&" + "entrust_prop=" + entrust_prop + "&" + "stock_code =" + stock_code + "&" + "entrust_price=" + price;
-		String Params = CreatBasicParams() + temp;
+		int entrust_bs = 1;
+		Random random = new Random();
+		int ram = random.nextInt();
+		String Params = temp + "&" + "exchange_type=" + exchange_type + "&" + "stock_account=" + stock_account + "&"
+				+ "stock_code=" + stock_code + "&" + "entrust_amount=" + entrust_amount + "&" + "entrust_price="
+				+ entrust_price + "&" + "entrust_prop=" + entrust_prop + "&" + "entrust_bs=" + entrust_bs + "&" + "ram="
+				+ ram;
 //		System.out.println(Params); // 调试用，输出参数设置
-		String BuyURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes()); 
+		String BuyURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes());
 //		System.out.println(BuyURL); // 调试用，输出申请的网页地址
 		HttpGet getBuy = new HttpGet(BuyURL);
-		getBuy.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+		getBuy.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 		try {
 			Exchanger.execute(getBuy);
-//			System.out.println(" "); // 调试用断点位置
+			// System.out.println(" "); // 调试用断点位置
 			HttpResponse responseGetBuy = Exchanger.execute(getBuy); // 调试用，发起对登录页的GET请求
 			String BuyJsonBase64 = EntityUtils.toString(responseGetBuy.getEntity(), "utf-8"); // 获取登录页的内容
 			byte[] BuyJsonByte = Base64.getDecoder().decode(BuyJsonBase64); // 将base64格式解码
@@ -353,7 +368,8 @@ public class Exchange { // 所有交易用到的方法
 			try {
 				BuyJson = new String(BuyJsonByte, "utf-8"); // 对解码后使用utf-8编码得到json格式交易信息
 				Buy = BuyJson;
-				//处理json
+				// 处理json
+//				System.out.println(Buy); // 调试用
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
@@ -364,8 +380,8 @@ public class Exchange { // 所有交易用到的方法
 		}
 		return Buy;
 	}
-	
-	public static String Sell(int StockCode, int Price){ // 卖
+
+	public static String Sell(int StockCode, double Price, int Amount) { // 卖
 		String Sell = null;
 		String SellParams = Globals.sell().toString();
 		Pattern dot = Pattern.compile(", ");
@@ -373,26 +389,33 @@ public class Exchange { // 所有交易用到的方法
 		String temp = MatchDot.replaceAll("&");
 		temp = temp.substring(1, temp.length() - 1);
 		int stock_code = StockCode; // 股票代码
-		int exchange_type = selectSHSZ(stock_code); //选择上海深圳
+		int exchange_type = selectSHSZ(stock_code); // 选择上海深圳
 		String stock_account = null;
-		if (exchange_type == 1){
+		if (exchange_type == 1) {
 			stock_account = Globals.sh_stock_account;
-		}
-		else {
+		} else {
 			stock_account = Globals.sz_stock_account;
 		}
-		int price = Price; // 卖出价格
+		int entrust_amount = Amount; // 买入总股数
+		double entrust_price = Price; // 买入价格
+		// int volume = Volume; // 买入总金额 由 volume / price 取 100 的整数， 若指定 amount
+		// 则此参数无效
 		int entrust_prop = 0; // 委托类型，暂未实现，默认为限价委托
-		temp = temp + "&" + "stock_account=" + stock_account + "&" + "exchange_type=" + exchange_type + "&" + "fund_account=" + Globals.fund_account + "&" + "client_risklevel=" + Globals.branch_no + "&" + "op_station=" + Globals.op_station + "&" + "trdpwd=" + Globals.trdpwd  + "&" + "uid=" + Globals.uid + "&" + "branch_no=" + Globals.branch_no + "&" + "entrust_prop=" + entrust_prop + "&" + "stock_code =" + stock_code + "&" + "entrust_price=" + price;
-		String Params = CreatBasicParams() + temp;
+		int entrust_bs = 1;
+		Random random = new Random();
+		int ram = random.nextInt();
+		String Params = temp + "&" + "exchange_type=" + exchange_type + "&" + "stock_account=" + stock_account + "&"
+				+ "stock_code=" + stock_code + "&" + "entrust_amount=" + entrust_amount + "&" + "entrust_price="
+				+ entrust_price + "&" + "entrust_prop=" + entrust_prop + "&" + "entrust_bs=" + entrust_bs + "&" + "ram="
+				+ ram;
 //		System.out.println(Params); // 调试用，输出参数设置
-		String SellURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes()); 
+		String SellURL = Globals.prefix + Base64.getEncoder().encodeToString(Params.getBytes());
 //		System.out.println(SellURL); // 调试用，输出申请的网页地址
 		HttpGet getSell = new HttpGet(SellURL);
-		getSell.setHeader("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+		getSell.setHeader("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
 		try {
 			Exchanger.execute(getSell);
-//			System.out.println(" "); // 调试用断点位置
+			// System.out.println(" "); // 调试用断点位置
 			HttpResponse responseGetSell = Exchanger.execute(getSell); // 调试用，发起对登录页的GET请求
 			String SellJsonBase64 = EntityUtils.toString(responseGetSell.getEntity(), "utf-8"); // 获取登录页的内容
 			byte[] SellJsonByte = Base64.getDecoder().decode(SellJsonBase64); // 将base64格式解码
@@ -400,7 +423,8 @@ public class Exchange { // 所有交易用到的方法
 			try {
 				SellJson = new String(SellJsonByte, "utf-8"); // 对解码后使用utf-8编码得到json格式交易信息
 				Sell = SellJson;
-				//处理json
+				// 处理json
+//				System.out.println(Sell); // 调试用
 			} catch (UnsupportedEncodingException e2) {
 				e2.printStackTrace();
 			}
@@ -411,32 +435,33 @@ public class Exchange { // 所有交易用到的方法
 		}
 		return Sell;
 	}
-	
+
 	public static String CreatBasicParams() { // 返回交易所需的基本参数
 		Random random = new Random();
 		int r = random.nextInt();
 		String op_branch_no = Globals.branch_no;
-		String BasicParams = "uid=" + Globals.uid + "&" + "version=" + Globals.version  + "&" + "custid="  + Globals.custid + "&" + "op_branch_no=" + op_branch_no + "&" + "branch_no=" + Globals.branch_no + "&" 
-				+ "op_entrust_way=" + Globals.op_entrust_way + "&" + "op_station=" + Globals.op_station + "&" + "fund_account=" + Globals.fund_account  + "&" + "password=" + Globals.password
-				 + "&" + "identity_type=" + Globals.identity_type + "&" + "ram=" + r;
-//		System.out.println(BasicParams); // 调试用，输出基本参数
+		String BasicParams = "uid=" + Globals.uid + "&" + "version=" + Globals.version + "&" + "custid="
+				+ Globals.custid + "&" + "op_branch_no=" + op_branch_no + "&" + "branch_no=" + Globals.branch_no + "&"
+				+ "op_entrust_way=" + Globals.op_entrust_way + "&" + "op_station=" + Globals.op_station + "&"
+				+ "fund_account=" + Globals.fund_account + "&" + "password=" + Globals.password + "&" + "identity_type="
+				+ Globals.identity_type + "&" + "ram=" + r;
+		// System.out.println(BasicParams); // 调试用，输出基本参数
 		return BasicParams;
 	}
 
-	public static int selectSHSZ(int StockCode){ // 识别股票代码首字符判断深沪市
+	public static int selectSHSZ(int StockCode) { // 识别股票代码首字符判断深沪市
 		String stockcode = Integer.toString(StockCode);
-		String temp = stockcode.substring(0);
-		if (temp.equals(5)||temp.equals(6)||temp.equals(9)){
+		String temp = stockcode.substring(0, 1);
+		if (temp.equals("5") || temp.equals("6") || temp.equals("9")) {
 			return 1; // 1是上海
-		}
-		else{
+		} else {
 			return 2; // 2是深圳
 		}
 	}
-	
-	public static void keepAlive(){ //每30秒尝试获取一次账户资金信息以保持会话
-		Timer timer = new Timer(); 
-	    timer.schedule(new KeepAlive(), 30 * 1000, 30 * 1000);
+
+	public static void keepAlive() { // 每30秒尝试获取一次账户资金信息以保持会话
+		Timer timer = new Timer();
+		timer.schedule(new KeepAlive(), 30 * 1000, 30 * 1000);
 	}
-	
+
 }

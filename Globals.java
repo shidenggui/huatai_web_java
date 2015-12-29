@@ -43,6 +43,7 @@ public class Globals { // 全局变量信息
 	public static String trdpwd = null;
 	public static String uid = null;
 	public static String branch_no = null;
+	public static String op_branch_no = null;
 
 	public static List<NameValuePair> login() {
 		String ip = getIp(); // 得到ip地址
@@ -102,43 +103,52 @@ public class Globals { // 全局变量信息
 
 	public static List<NameValuePair> buy() {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("uid", uid));
 		params.add(new BasicNameValuePair("cssweb_type", "STOCK_BUY"));
-		params.add(new BasicNameValuePair("function_id", "302"));
-		params.add(new BasicNameValuePair("exchange_type", ""));
-		params.add(new BasicNameValuePair("stock_account", ""));
-		params.add(new BasicNameValuePair("stock_code", ""));
-		params.add(new BasicNameValuePair("query_direction", ""));
-		params.add(new BasicNameValuePair("sort_direction", "0"));
-		params.add(new BasicNameValuePair("request_num", "100"));
+		params.add(new BasicNameValuePair("version", version));
+		params.add(new BasicNameValuePair("custid", custid));
+		params.add(new BasicNameValuePair("op_branch_no", op_branch_no));
+		params.add(new BasicNameValuePair("branch_no", branch_no));
+		params.add(new BasicNameValuePair("op_entrust_way", "7"));
+		params.add(new BasicNameValuePair("op_station", op_station));
+		params.add(new BasicNameValuePair("function_id", "301"));
+		params.add(new BasicNameValuePair("fund_account", userName));
+		params.add(new BasicNameValuePair("password", password));
 		params.add(new BasicNameValuePair("identity_type", ""));
-		params.add(new BasicNameValuePair("entrust_bs", "1"));
 		return params;
 	}
 
 	public static List<NameValuePair> sell() {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
-		params.add(new BasicNameValuePair("cssweb_type", "STOCK_SALE"));
+		params.add(new BasicNameValuePair("uid", uid));
+		params.add(new BasicNameValuePair("cssweb_type", "STOCK_SELL"));
+		params.add(new BasicNameValuePair("version", version));
+		params.add(new BasicNameValuePair("custid", custid));
+		params.add(new BasicNameValuePair("op_branch_no", op_branch_no));
+		params.add(new BasicNameValuePair("branch_no", branch_no));
+		params.add(new BasicNameValuePair("op_entrust_way", "7"));
+		params.add(new BasicNameValuePair("op_station", op_station));
 		params.add(new BasicNameValuePair("function_id", "302"));
-		params.add(new BasicNameValuePair("exchange_type", ""));
-		params.add(new BasicNameValuePair("stock_account", ""));
-		params.add(new BasicNameValuePair("stock_code", ""));
-		params.add(new BasicNameValuePair("query_direction", ""));
-		params.add(new BasicNameValuePair("sort_direction", "0"));
-		params.add(new BasicNameValuePair("request_num", "100"));
+		params.add(new BasicNameValuePair("fund_account", userName));
+		params.add(new BasicNameValuePair("password", password));
 		params.add(new BasicNameValuePair("identity_type", ""));
-		params.add(new BasicNameValuePair("entrust_bs", "2"));
 		return params;
 	}
 
 	public static List<NameValuePair> cancel_entrust() {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		params.add(new BasicNameValuePair("uid", uid));
 		params.add(new BasicNameValuePair("cssweb_type", "STOCK_CANCEL"));
+		params.add(new BasicNameValuePair("version", version));
+		params.add(new BasicNameValuePair("custid", custid));
+		params.add(new BasicNameValuePair("op_branch_no", op_branch_no));
+		params.add(new BasicNameValuePair("branch_no", branch_no));
+		params.add(new BasicNameValuePair("op_entrust_way", "7"));
+		params.add(new BasicNameValuePair("op_station", op_station));
 		params.add(new BasicNameValuePair("function_id", "304"));
-		params.add(new BasicNameValuePair("exchange_type", ""));
-		params.add(new BasicNameValuePair("stock_code", ""));
+		params.add(new BasicNameValuePair("fund_account", userName));
+		params.add(new BasicNameValuePair("password", password));
 		params.add(new BasicNameValuePair("identity_type", ""));
-		params.add(new BasicNameValuePair("entrust_bs", "2"));
-		params.add(new BasicNameValuePair("batch_flag", "0"));
 		return params;
 	}
 
